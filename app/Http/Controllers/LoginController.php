@@ -20,23 +20,24 @@ class LoginController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the input
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+        $validated = $request->validate([
+            'email'     => 'required|email',
+            'password'  => 'required|min:6', 
+        ], [
+            'email.required'        => 'Alamat email diperlukan.',
+            'email.email'           => 'Format email tidak valid.',
+            'password.required'     => 'Kata sandi diperlukan.',
+            'password.min'          => 'Kata sandi harus terdiri dari minimal 6 karakter.',
         ]);
 
-        // Attempt to authenticate the user
-        if (Auth::attempt($credentials)) {
-            // If authentication is successful, regenerate the session
+        // Cek kredensial login
+        if (Auth::attempt($validated)) {
             $request->session()->regenerate();
 
-            // Redirect to the dashboard
-            return redirect()->intended('dashboard')->with('success', 'Login successful');
+            return redirect()->intended('menu')->with('success', 'Login berhasil');
         }
 
-        // If authentication fails, redirect back to the login form with an error message
-        return back()->with('failed', 'Invalid credentials. Please try again.');
+        return back()->with('failed', 'Gagal login')->withInput();
     }
 
     /**
@@ -46,10 +47,9 @@ class LoginController extends Controller
     {
         Auth::logout();
 
-        // Invalidate the session to log out the user securely
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login')->with('success', 'You have been logged out.');
+        return redirect('/login')->with('success', 'Berhasil logout');
     }
 }
