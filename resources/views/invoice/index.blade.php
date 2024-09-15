@@ -13,24 +13,34 @@
             <table class="table table-borderless">
                 <tbody>
                     <tr>
-                        <td width="220"><strong>Tanggal Invoice</strong></td>
+                        <td width="220"><strong>Nama Pemesan</strong></td>
                         <td width="20">:</td>
+                        <td>{{ $invoice->order->user->name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Nama Katering</strong></td>
+                        <td>:</td>
+                        <td>{{ $invoice->order->menu->merchant->company_name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tanggal Pesanan</strong></td>
+                        <td>:</td>
                         <td>{{ $invoice->invoice_date }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Total Amount</strong></td>
+                        <td><strong>Nama Menu Makanan</strong></td>
                         <td>:</td>
-                        <td>Rp {{ number_format($invoice->total_amount, 0, ',', '.') }}</td>
+                        <td>{{ $invoice->order->menu->name }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Jumlah Porsi</strong></td>
+                        <td><strong>Jumlah Pesanan</strong></td>
                         <td>:</td>
                         <td>{{ $invoice->order->quantity }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Menu</strong></td>
+                        <td><strong>Total Harga</strong></td>
                         <td>:</td>
-                        <td>{{ $invoice->order->menu->name }}</td>
+                        <td>Rp {{ number_format($invoice->order->menu->price * $invoice->order->quantity, 0, ',', '.') }}</td>
                     </tr>
                     <tr>
                         <td><strong>Tanggal Pengiriman</strong></td>
@@ -42,17 +52,14 @@
                         <td>:</td>
                         <td>{{ $invoice->order->delivery_time }}</td>
                     </tr>
-                    <tr>
-                        <td><strong>Nama Pemesan</strong></td>
-                        <td>:</td>
-                        <td>{{ $invoice->order->user->name }}</td>
-                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <a href="{{ route('orders.index') }}" class="btn btn-primary">Kembali ke Daftar Pesanan</a>
+    <div class="d-flex justify-content-end mt-3">
+        <a href="{{ route('orders.index') }}" class="btn btn-primary">Kembali ke Daftar Pesanan</a>
+    </div>
 </div>
 
 @endsection
