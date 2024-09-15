@@ -16,8 +16,14 @@ class Menu extends Model
         'user_id',
         'type_of_food',
     ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function merchant()
+    {
+        return $this->belongsTo(MerchantProfile::class, 'user_id');
     }
 }
