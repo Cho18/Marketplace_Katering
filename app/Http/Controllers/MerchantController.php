@@ -10,10 +10,8 @@ class MerchantController extends Controller
 {
     public function index(Request $request)
     {
-        // Get search query
         $search = $request->input('search');
 
-        // Fetch all merchant profiles with optional search
         $query = MerchantProfile::query();
 
         if ($search) {
@@ -23,6 +21,8 @@ class MerchantController extends Controller
                 ->orWhere('description', 'like', '%' . $search . '%');
         }
 
+        $query->orderBy('company_name', 'asc');
+        
         $merchants = $query->paginate(10);
 
         return view('merchants.index', compact('merchants', 'search'));
@@ -30,13 +30,10 @@ class MerchantController extends Controller
 
     public function show(Request $request, $id)
     {
-        // Find the merchant profile
         $merchant = MerchantProfile::findOrFail($id);
 
-        // Get search query for menus
         $search = $request->input('search');
 
-        // Get menus for this merchant's user
         $query = Menu::where('user_id', $merchant->user_id);
 
         if ($search) {
