@@ -15,12 +15,10 @@
     <link href="./css/style.css" rel="stylesheet">
 
     <style>
-        /* Custom style to remove underline from the link */
         a.text-primary {
             text-decoration: none;
         }
 
-        /* Optional: Add hover effect to underline when hovered */
         a.text-primary:hover {
             text-decoration: underline;
         }
@@ -36,41 +34,41 @@
                     <small> Marketplace Katering </small>
                 </p>
                 <hr>
+                @if (session()->has('success'))
+                    <div class="alert alert-success alert-dismissible fade show col-md-6" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+                
                 @if (session()->has('failed'))
                     <div class="alert alert-danger alert-dismissible fade show col-md-6" role="alert">
                         {{ session('failed') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
+
                 <form action="/login" method="post">
                     @csrf
-                    <!-- Success message -->
-                    @if (session()->has('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
-                
-                    <!-- Error message -->
-                    @if (session()->has('failed'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            {{ session('failed') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
-                
+
                     <div class="form-group has-feedback">
                         <div class="form-group field-loginform-username required">
                             <label class="control-label" for="email">Email</label>
-                            <input type="text" name="email" id="email" class="form-control" aria-required="true" autofocus required>
+                            <input type="text" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" aria-required="true" autofocus required>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
                         <div class="form-group field-loginform-password required mt-3">
                             <label class="control-label" for="password">Password</label>
                             <div class="input-group">
-                                <input type="password" name="password" id="password" class="form-control" aria-required="true" required/>
+                                <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" aria-required="true" required/>
                                 <span class="input-group-text">
                                     <i class="fas fa-eye-slash show-hide"></i>
                                 </span>
+                                @error('password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -92,18 +90,15 @@
         </div>
     </div>
 
-    <!-- Script to toggle password visibility -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const togglePassword = document.querySelector(".show-hide");
             const passwordField = document.querySelector("#password");
 
             togglePassword.addEventListener("click", function () {
-                // Toggle the type attribute
                 const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
                 passwordField.setAttribute("type", type);
 
-                // Toggle the eye icon
                 this.classList.toggle("fa-eye");
                 this.classList.toggle("fa-eye-slash");
             });
