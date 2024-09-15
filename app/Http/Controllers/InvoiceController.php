@@ -9,10 +9,8 @@ class InvoiceController extends Controller
 {
     public function show($id)
     {
-        // Ambil invoice berdasarkan ID
-        $invoice = Invoice::findOrFail($id);
+        $invoice = Invoice::with(['order.menu.merchant'])->findOrFail($id);
 
-        // Tampilkan view dengan data invoice
         return view('invoice.index', compact('invoice'));
     }
 }
