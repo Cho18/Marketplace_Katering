@@ -15,16 +15,15 @@ class MerchantProfileController extends Controller
     {
         $user = Auth::user();
         
-        // Check if the merchant profile exists, if not, create a new one
         $profile = $user->merchantProfile;
 
         if (!$profile) {
             $profile = MerchantProfile::create([
-                'user_id' => $user->id,
-                'company_name' => '',
-                'address' => '',
-                'contact' => '',
-                'description' => '',
+                'user_id'           => $user->id,
+                'company_name'      => '',
+                'address'           => '',
+                'contact'           => '',
+                'description'       => '',
             ]);
         }
 
@@ -48,22 +47,34 @@ class MerchantProfileController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
+
         $profile = $user->merchantProfile;
 
         $request->validate([
-            'company_name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'contact' => 'required|string|max:50',
-            'description' => 'nullable|string',
+            'company_name'      => 'required|string|max:255',
+            'address'           => 'required|string|max:255',
+            'contact'           => 'required|string|max:50',
+            'description'       => 'nullable|string',
+        ], [
+            'company_name.required' => 'Nama katering diperlukan.',
+            'company_name.string'   => 'Nama katering harus berupa string.',
+            'company_name.max'      => 'Nama katering tidak boleh lebih dari 255 karakter.',
+            'address.required'      => 'Alamat diperlukan.',
+            'address.string'        => 'Alamat harus berupa string.',
+            'address.max'           => 'Alamat tidak boleh lebih dari 255 karakter.',
+            'contact.required'      => 'Kontak diperlukan.',
+            'contact.string'        => 'Kontak harus berupa string.',
+            'contact.max'           => 'Kontak tidak boleh lebih dari 50 karakter.',
+            'description.string'    => 'Deskripsi harus berupa string.',
         ]);
 
         $profile->update([
-            'company_name' => $request->company_name,
-            'address' => $request->address,
-            'contact' => $request->contact,
-            'description' => $request->description,
+            'company_name'      => $request->company_name,
+            'address'           => $request->address,
+            'contact'           => $request->contact,
+            'description'       => $request->description,
         ]);
 
-        return redirect()->route('merchant.profile')->with('success', 'Profile updated successfully.');
+        return redirect()->route('merchant.profile')->with('success', 'Profil berhasil diperbarui.');
     }
 }
