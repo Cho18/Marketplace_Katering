@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Marketplace Katering</title>
 
     <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -14,9 +14,7 @@
     <!-- DataTables CSS -->
     <link href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css" rel="stylesheet">
     
-
     <style>
-        /* Main container styles */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
@@ -24,7 +22,6 @@
             padding: 0;
         }
 
-        /* Sidebar styles */
         .sidebar {
             width: 250px;
             background-color: #343a40;
@@ -64,8 +61,8 @@
 
         .sidebar .menu-item a {
             color: white;
-            text-decoration: none; /* Remove underline */
-            width: 100%; /* Make the link fill the menu item */
+            text-decoration: none;
+            width: 100%;
             display: block;
         }
 
@@ -128,14 +125,21 @@
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            width: calc(100% - 250px);
-            margin-left: 250px;
-            transition: margin-left 0.3s, width 0.3s;
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 250px;
+            transition: left 0.3s ease;
+            z-index: 999;
+            width: auto;
+        }
+
+        .sidebar.closed + .navbar {
+            left: 70px;
         }
 
         .main-content.collapsed ~ .navbar {
-            margin-left: 70px;
-            width: calc(100% - 70px);
+            left: 70px;
         }
 
         .profile-link a {
@@ -152,54 +156,47 @@
             cursor: pointer;
             font-size: 0.9rem;
         }
-
     </style>
 </head>
-<body>
-
-    <!-- Sidebar -->
+    <body>
     <div class="sidebar" id="sidebar">
         <div>
             <h2>Marketplace Katering</h2>
-    
             <div class="separator"></div>
-    
-            @if(Auth::user()->role_id == 2)
-    <div class="menu-item {{ request()->is('merchant_profile') ? 'active' : '' }}">
-        <i class="fa-solid fa-address-card"></i>
-        <span><a href="/merchant_profile" class="text-white">Profile</a></span>
-    </div>
-        <div class="menu-item {{ request()->is('menu') ? 'active' : '' }}">
-            <i class="fas fa-utensils"></i>
-            <span><a href="/menu" class="text-white">Menu Makanan</a></span>
-        </div>
-        <div class="menu-item {{ request()->is('order') ? 'active' : '' }}">
-            <i class="fas fa-clipboard-list"></i>
-            <span><a href="/orders" class="text-white">Daftar Order</a></span>
-        </div>
-    @elseif(Auth::user()->role_id == 1)
-        <div class="menu-item {{ request()->is('menu') ? 'active' : '' }}">
-            <i class="fas fa-users"></i>
-            <span><a href="/merchants" class="text-white">Katering</a></span>
-        </div>
-        <div class="menu-item {{ request()->is('menu') ? 'active' : '' }}">
-            <i class="fas fa-utensils"></i>
-            <span><a href="/menu" class="text-white">Menu Makanan</a></span>
-        </div>
-        <div class="menu-item {{ request()->is('profile') ? 'active' : '' }}">
-            <i class="fa-solid fa-address-card"></i>
-            <span><a href="/orders" class="text-white">Daftar Order</a></span>
-        </div>
-    @endif
 
+            @if(Auth::user()->role_id == 2)
+                <div class="menu-item {{ request()->is('menu') ? 'active' : '' }}">
+                    <i class="fas fa-utensils"></i>
+                    <span><a href="/menu" class="text-white">Menu Makanan</a></span>
+                </div>
+                <div class="menu-item {{ request()->is('order') ? 'active' : '' }}">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span><a href="/orders" class="text-white">Daftar Order</a></span>
+                </div>
+                <div class="menu-item {{ request()->is('merchant_profile') ? 'active' : '' }}">
+                    <i class="fa-solid fa-address-card"></i>
+                    <span><a href="/merchant_profile" class="text-white">Profil</a></span>
+                </div>
+            @elseif(Auth::user()->role_id == 1)
+                <div class="menu-item {{ request()->is('menu') ? 'active' : '' }}">
+                    <i class="fas fa-utensils"></i>
+                    <span><a href="/menu" class="text-white">Menu Makanan</a></span>
+                </div>
+                <div class="menu-item {{ request()->is('merchants') ? 'active' : '' }}">
+                    <i class="fas fa-users"></i>
+                    <span><a href="/merchants" class="text-white">Katering</a></span>
+                </div>
+                <div class="menu-item {{ request()->is('orders') ? 'active' : '' }}">
+                    <i class="fa-solid fa-address-card"></i>
+                    <span><a href="/orders" class="text-white">Daftar Order</a></span>
+                </div>
+            @endif
         </div>
-    
         <div class="toggle-button" onclick="toggleSidebar()">
             <i class="fas fa-bars"></i>
         </div>
     </div>
     
-
     <div class="navbar" id="navbar">
         <div class="logout-button">
             <form action="{{ route('logout') }}" method="POST">
