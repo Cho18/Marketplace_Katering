@@ -17,19 +17,16 @@ class Order extends Model
         'delivery_time'
     ];
 
-    // Relasi ke model Menu
     public function menu()
     {
         return $this->belongsTo(Menu::class);
     }
 
-    // Relasi ke model User
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Relasi ke model Invoice
     public function invoice()
     {
         return $this->hasOne(Invoice::class);
