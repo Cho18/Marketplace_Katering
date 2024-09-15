@@ -16,9 +16,18 @@ class Invoice extends Model
         'invoice_date'
     ];
 
-    // Relasi ke model Order
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function menu()
+    {
+        return $this->order->menu();
+    }
+
+    public function merchant()
+    {
+        return $this->order->menu->merchant();
     }
 }
