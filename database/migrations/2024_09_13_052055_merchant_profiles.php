@@ -13,15 +13,13 @@ return new class extends Migration
     {
         Schema::create('merchant_profiles', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id'); // Assuming merchant is a user
+            $table->unsignedBigInteger('user_id'); 
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('company_name');
             $table->string('address');
             $table->string('contact');
             $table->text('description')->nullable();
             $table->timestamps();
-
-            // Foreign key constraint (user_id must exist in users table)
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
