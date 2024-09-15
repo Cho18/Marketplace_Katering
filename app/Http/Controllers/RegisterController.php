@@ -22,28 +22,36 @@ class RegisterController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate form input
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
-            'status' => 'required|in:Customer,Merchant',
+            'name'          => 'required|string|max:255',
+            'email'         => 'required|email|unique:users,email',
+            'password'      => 'required|string|min:6|confirmed',
+            'status'        => 'required|in:Customer,Merchant',
+        ], [
+            'name.required'          => 'Nama diperlukan.',
+            'name.string'            => 'Nama harus berupa string.',
+            'name.max'               => 'Nama tidak boleh lebih dari 255 karakter.',
+            'email.required'         => 'Email diperlukan.',
+            'email.email'            => 'Format email tidak valid.',
+            'email.unique'           => 'Email sudah digunakan.',
+            'password.required'      => 'Kata sandi diperlukan.',
+            'password.min'           => 'Kata sandi harus memiliki minimal 6 karakter.',
+            'password.confirmed'     => 'Konfirmasi kata sandi tidak cocok.',
+            'status.required'        => 'Status diperlukan.',
+            'status.in'              => 'Status harus salah satu dari: Customer, Merchant.',
         ]);
 
-        // If validation fails, redirect back with errors
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
 
-        // Create new user and hash the password
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password), // Hash the password
-            'role_id' => $request->status === 'Customer' ? 1 : 2, // Assuming 1 for Customer and 2 for Merchant in roles table
+            'password' => Hash::make($request->password),
+            'role_id' => $request->status === 'Customer' ? 1 : 2,
         ]);
 
-        // Redirect to login with success message
-        return redirect('/login')->with('success', 'Registration successful. Please log in.');
+        return redirect('/login')->with('success', 'Pendaftaran akun telah berhasil');
     }
 }
